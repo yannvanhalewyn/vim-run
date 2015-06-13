@@ -11,7 +11,13 @@ function! s:getCommand()
   return ""
 endfunction
 
-function! s:getRunner()
+function! s:getRunner(cmd)
+  if exists("$TMUX")
+    let l:runner = g:run_tmux_runner
+  else
+    let l:runner = g:run_default_runner
+  endif
+  return substitute(l:runner, "{cmd}", a:cmd, "g")
 endfunction
 
 function! s:executeRunner()
