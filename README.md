@@ -90,6 +90,17 @@ Using any package manager. Example for vim-plug:
 
     Plug 'yannvanhalewyn/vim-run'
 
+Running tests
+-------------
+
+Tests are written using vim-vspec and run with vim-flavor.
+
+Install the vim-flavor gem, install the dependencies and run the tests:
+
+    gem install vim-flavor
+    vim-flavor install
+    rake
+
 Note
 ----
 
