@@ -9,6 +9,7 @@ describe "run"
       Expect g:run_default_runner == 'silent !{cmd}'
       Expect g:run_tmux_runner == 'call VimuxRunCommand("{cmd}")'
       Expect g:run_ignore_tmux == ['vim']
+      Expect g:run_custom_runners == {"vim": "{cmd}"}
       Expect g:run_commands == {
       \   'cpp,java,make' : 'make run',
       \   'html,markdown' : 'open {%}',

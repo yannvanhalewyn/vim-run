@@ -49,6 +49,9 @@ function! s:init()
   if !exists("g:run_ignore_tmux")
     let g:run_ignore_tmux = ['vim']
   endif
+  if !exists("g:run_custom_runners")
+    let g:run_custom_runners = {'vim': "{cmd}"}
+  endif
   if !exists("g:run_commands")
     let g:run_commands = {
   \   'cpp,java,make' : 'make run',
