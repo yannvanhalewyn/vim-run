@@ -50,9 +50,10 @@ function! s:init()
     let g:run_commands = {
   \   'cpp,java,make' : 'make run',
   \   'html,markdown' : 'open {%}',
-  \   'javascript'    : 'node {%}',
+  \   'javascript'    : 'npm start',
   \   'ruby'          : 'ruby {%}',
-  \   'vim'           : 'source {%}'
+  \   'vim,conf'      : 'source {%}',
+  \   'sh'            : './{%}'
   \ }
   endif
   map <Plug>(Run) :call Run()<CR>

@@ -11,9 +11,10 @@ describe "run"
       Expect g:run_commands == {
       \   'cpp,java,make' : 'make run',
       \   'html,markdown' : 'open {%}',
-      \   'javascript'    : 'node {%}',
+      \   'javascript'    : 'npm start',
       \   'ruby'          : 'ruby {%}',
-      \   'vim'           : 'source {%}'
+      \   'vim,conf'      : 'source {%}',
+      \   'sh'            : './{%}',
       \ }
     end
 
