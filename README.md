@@ -47,9 +47,10 @@ Use wildcards to insert current filepath `{%}` or the current linenumber `{.}`
 
 ### Defining the runners
 
-There are two runners (for now). A default runner, and a runner for the Tmux environment. The `{cmd}` will be replaced by the command corresponding to the filetype.
+There are three runners (for now). A default runner, a gvim (or MacVim) runner and a runner for the Tmux environment. The `{cmd}` will be replaced by the command corresponding to the filetype.
 
-    let g:run_default_runner = 'silent !{cmd}'
+    let g:run_default_runner = '!{cmd}'
+    let g:run_gvim_runner = 'silent !run_in_terminal {cmd}'
     let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
 
 You can also specify custom runners for a specific filetype. For example, all is well to run silent !{cmd} on most filetypes, but when sourcing .vim files, this doesn't work. The custom runner takes precedence over any other runners.
@@ -74,7 +75,7 @@ Defaults
 These are currently the defaults. They fit me well, please let me know if you dissagree. If this is what you need, no extra configuration is needed to make vim-run work:
 
     let g:run_mapping = '<leader>r'
-    let g:run_default_runner = 'silent !{cmd}'
+    let g:run_default_runner = '!{cmd}'
     let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
     let g:run_ignore_tmux = ['vim']
     let g:run_custom_runners = {"vim": "{cmd}"}

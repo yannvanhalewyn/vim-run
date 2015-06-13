@@ -25,9 +25,10 @@ function! s:getRunner()
   endif
   if exists("$TMUX") && index(g:run_ignore_tmux, &filetype) == -1
     return g:run_tmux_runner
-  else
-    return g:run_default_runner
+  elseif has("gui")
+    return g:run_gui_runner
   endif
+  return g:run_default_runner
 endfunction
 
 " Returns the executable string, replacing {cmd} and other wildcards
@@ -48,6 +49,10 @@ function! s:init()
   endif
   if !exists("g:run_tmux_runner")
     let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
+  endif
+  if !exists("g:run_gui_runner")
+    let l:path = expand("<sfile>:p:h:h")
+    let g:run_gui_runner = 'silent !' . l:path . "/bin/execute_in_terminal '{cmd}'"
   endif
   if !exists("g:run_ignore_tmux")
     let g:run_ignore_tmux = ['vim']

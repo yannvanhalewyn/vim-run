@@ -2,12 +2,14 @@ source plugin/run.vim
 
 call vspec#hint({'scope': 'run#scope()', 'sid': 'run#sid()'})
 
+
 describe "run"
   describe "s:init()"
     it "sets the correct defaults if none set"
       Expect g:run_mapping == '<leader>r'
       Expect g:run_default_runner == 'silent !{cmd}'
       Expect g:run_tmux_runner == 'call VimuxRunCommand("{cmd}")'
+      Expect g:run_gui_runner == 'silent !' . expand("<sfile>:p:h:h") . "/bin/execute_in_terminal '{cmd}'"
       Expect g:run_ignore_tmux == ['vim']
       Expect g:run_custom_runners == {"vim": "{cmd}"}
       Expect g:run_commands == {
@@ -48,10 +50,15 @@ describe "run"
   end
 
   describe "s:getRunner()"
+    " If anyone has an idea on how to stub has("gui") and exists("$TMUX"),
+    " please let me know!
     it "returns the correct command (run this in and out of tmux, can't stub)"
       if exists("$TMUX")
         let g:run_tmux_runner = "TMUX command {cmd}"
         Expect Call("s:getRunner") == "TMUX command {cmd}"
+      elseif has("gui")
+        let g:run_gui_runner = "GUI command {cmd}"
+        Expect Call("s:getRunner") == "GUI command {cmd}"
       else
         let g:run_default_runner = "DEFAULT command {cmd}"
         Expect Call("s:getRunner") == "DEFAULT command {cmd}"
@@ -65,10 +72,15 @@ describe "run"
       Expect Call("s:getRunner") == "DEFAULT command {cmd}"
     end
 
-    it "uses custom runner if ft is specified in g:run_ignore_tmux"
+    it "uses custom runner if any"
       set ft=vim
       let g:run_custom_runners = {"vim": "{cmd}"}
       Expect Call("s:getRunner") == "{cmd}"
+    end
+
+    it "returns the guivim runner if guivim"
+      Expect Call("s:getRunner") == "silent !" . expand("<sfile>:p:h:h") .
+            \ "bin/execute_in_terminal '{cmd}'"
     end
   end
 

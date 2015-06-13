@@ -1,0 +1,10 @@
+#!/usr/bin/osascript
+
+on run argv
+  tell application "Terminal"
+    do script argv in window 1
+  end tell
+  tell application "MacVim"
+    activate
+  end tell
+end run
