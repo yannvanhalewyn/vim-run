@@ -52,6 +52,10 @@ There are two runners (for now). A default runner, and a runner for the Tmux env
     let g:run_default_runner = 'silent !{cmd}'
     let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
 
+You can also specify custom runners for a specific filetype. For example, all is well to run silent !{cmd} on most filetypes, but when sourcing .vim files, this doesn't work. The custom runner takes precedence over any other runners.
+
+    let g:run_custom_runners = {'vim': '{cmd}'}
+
 ### Define the keystroke
 
 Vim-run defaults to `<leader>r` (for "run"). If you dislike this mapping, you can override it:
@@ -69,18 +73,19 @@ Defaults
 
 These are currently the defaults. They fit me well, please let me know if you dissagree. If this is what you need, no extra configuration is needed to make vim-run work:
 
-      let g:run_mapping == '<leader>r'
-      let g:run_default_runner == 'silent !{cmd}'
-      let g:run_tmux_runner == 'call VimuxRunCommand("{cmd}")'
-      let g:run_ignore_tmux == ['vim']
-      let g:run_commands == {
-      \   'cpp,java,make' : 'make run',
-      \   'html,markdown' : 'open {%}',
-      \   'javascript'    : 'npm start',
-      \   'ruby'          : 'ruby {%}',
-      \   'vim,conf'      : 'source {%}',
-      \   'sh'            : './{%}',
-      \ }
+    let g:run_mapping = '<leader>r'
+    let g:run_default_runner = 'silent !{cmd}'
+    let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
+    let g:run_ignore_tmux = ['vim']
+    let g:run_custom_runners = {"vim": "{cmd}"}
+    let g:run_commands = {
+    \   'cpp,java,make' : 'make run',
+    \   'html,markdown' : 'open {%}',
+    \   'javascript'    : 'npm start',
+    \   'ruby'          : 'ruby {%}',
+    \   'vim,conf'      : 'source {%}',
+    \   'sh'            : './{%}',
+    \ }
 
 
 Installation

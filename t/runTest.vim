@@ -58,11 +58,17 @@ describe "run"
       endif
     end
 
-    it "take uses default runner if ft is specified in g:run_ignore_tmux"
-      set ft=vim
+    it "uses default runner if ft is specified in g:run_ignore_tmux"
+      set ft=cpp
       let g:run_default_runner = "DEFAULT command {cmd}"
-      let g:run_ignore_tmux = ['vim']
+      let g:run_ignore_tmux = ['cpp']
       Expect Call("s:getRunner") == "DEFAULT command {cmd}"
+    end
+
+    it "uses custom runner if ft is specified in g:run_ignore_tmux"
+      set ft=vim
+      let g:run_custom_runners = {"vim": "{cmd}"}
+      Expect Call("s:getRunner") == "{cmd}"
     end
   end
 

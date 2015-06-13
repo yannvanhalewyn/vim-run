@@ -20,6 +20,9 @@ endfunction
 
 " Returns the correct runner according to environment
 function! s:getRunner()
+  if exists("g:run_custom_runners[&filetype]")
+    return g:run_custom_runners[&filetype]
+  endif
   if exists("$TMUX") && index(g:run_ignore_tmux, &filetype) == -1
     return g:run_tmux_runner
   else
