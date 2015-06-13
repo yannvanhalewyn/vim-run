@@ -7,7 +7,7 @@ describe "run"
   describe "s:init()"
     it "sets the correct defaults if none set"
       Expect g:run_mapping == '<leader>r'
-      Expect g:run_default_runner == 'silent !{cmd}'
+      Expect g:run_default_runner == '!{cmd}'
       Expect g:run_tmux_runner == 'call VimuxRunCommand("{cmd}")'
       Expect g:run_gui_runner == 'silent !' . expand("<sfile>:p:h:h") . "/bin/execute_in_terminal '{cmd}'"
       Expect g:run_ignore_env == ['vim']
@@ -65,10 +65,10 @@ describe "run"
       endif
     end
 
-    it "uses default runner if ft is specified in g:run_ignore_tmux"
+    it "uses default runner if ft is specified in g:run_ignore_env"
       set ft=cpp
       let g:run_default_runner = "DEFAULT command {cmd}"
-      let g:run_ignore_tmux = ['cpp']
+      let g:run_ignore_env = ['cpp']
       Expect Call("s:getRunner") == "DEFAULT command {cmd}"
     end
 
