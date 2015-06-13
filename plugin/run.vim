@@ -50,7 +50,7 @@ function! s:init()
     let g:run_commands = {
   \   'cpp,java,make' : 'make run',
   \   'html,markdown' : 'open {%}',
-  \   'js'            : 'node {%}',
+  \   'javascript'    : 'node {%}',
   \   'ruby'          : 'ruby {%}',
   \   'vim'           : 'source {%}'
   \ }
