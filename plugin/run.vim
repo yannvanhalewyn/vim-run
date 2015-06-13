@@ -20,7 +20,7 @@ endfunction
 
 " Returns the correct runner according to environment
 function! s:getRunner()
-  if exists("$TMUX")
+  if exists("$TMUX") && index(g:run_ignore_tmux, &filetype) == -1
     return g:run_tmux_runner
   else
     return g:run_default_runner
@@ -45,6 +45,9 @@ function! s:init()
   endif
   if !exists("g:run_tmux_runner")
     let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
+  endif
+  if !exists("g:run_ignore_tmux")
+    let g:run_ignore_tmux = ['vim']
   endif
   if !exists("g:run_commands")
     let g:run_commands = {
