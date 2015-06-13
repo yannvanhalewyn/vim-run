@@ -23,7 +23,10 @@ function! s:getRunner()
   if exists("g:run_custom_runners[&filetype]")
     return g:run_custom_runners[&filetype]
   endif
-  if exists("$TMUX") && index(g:run_ignore_tmux, &filetype) == -1
+  if index(g:run_ignore_env, &filetype) == -1
+    return g:run_default_runner
+  endif
+  if exists("$TMUX")
     return g:run_tmux_runner
   elseif has("gui")
     return g:run_gui_runner
@@ -54,8 +57,8 @@ function! s:init()
     let l:path = expand("<sfile>:p:h:h")
     let g:run_gui_runner = 'silent !' . l:path . "/bin/execute_in_terminal '{cmd}'"
   endif
-  if !exists("g:run_ignore_tmux")
-    let g:run_ignore_tmux = ['vim']
+  if !exists("g:run_ignore_env")
+    let g:run_ignore_env = ['vim']
   endif
   if !exists("g:run_custom_runners")
     let g:run_custom_runners = {'vim': "{cmd}"}
