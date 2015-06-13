@@ -5,7 +5,7 @@
 function! VimRun()
   let l:cmd = s:getCommand()
   let l:runner = s:getRunner()
-  s:execute(l:cmd, l:runner)
+  call s:execute(l:cmd, l:runner)
 endfunction
 
 " Returns the correct command as specified by g:run_commands dictionary
@@ -33,7 +33,7 @@ endfunction
 
 function! s:init()
   if !exists("g:run_mapping")
-    let g:run_mapping = '<leader>w'
+    let g:run_mapping = '<leader>r'
   endif
   if !exists("g:run_default_runner")
     let g:run_default_runner = 'silent !{cmd}'
@@ -51,7 +51,7 @@ function! s:init()
   \ }
   endif
   map <Plug>(Run) :call Run()<CR>
-  execute 'nnoremap ' . g:run_mapping . ' :call VimRun()'
+  execute 'nnoremap ' . g:run_mapping . ' :call VimRun()<CR>'
 endfunction
 
 " begin vspec config

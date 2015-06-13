@@ -5,7 +5,7 @@ call vspec#hint({'scope': 'run#scope()', 'sid': 'run#sid()'})
 describe "run"
   describe "s:init()"
     it "sets the correct defaults if none set"
-      Expect g:run_mapping == '<leader>w'
+      Expect g:run_mapping == '<leader>r'
       Expect g:run_default_runner == 'silent !{cmd}'
       Expect g:run_tmux_runner == 'call VimuxRunCommand("{cmd}")'
       Expect g:run_commands == {
