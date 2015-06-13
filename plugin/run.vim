@@ -22,11 +22,9 @@ endfunction
 function! s:getRunner()
   if exists("g:run_custom_runners[&filetype]")
     return g:run_custom_runners[&filetype]
-  endif
-  if index(g:run_ignore_env, &filetype) != -1
+  elseif index(g:run_ignore_env, &filetype) != -1
     return g:run_default_runner
-  endif
-  if exists("$TMUX")
+  elseif exists("$TMUX")
     return g:run_tmux_runner
   elseif has("gui")
     return g:run_gui_runner

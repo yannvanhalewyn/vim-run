@@ -57,17 +57,19 @@ You can also specify custom runners for a specific filetype. For example, all is
 
     let g:run_custom_runners = {'vim': '{cmd}'}
 
+**Attention** If you have linked vim to a macvim binary (-> brew install macvim could do that), even terminal vim w/o tmux will use the gui\_runner instead of default\_runner because that vim process responds true to `has("gui")`. If you're not sure, run `:echo has("gui")`. It should be 0 in terminal vim, and 1 in Gvim/Macvim. Plan your runners accordingly!
+
 ### Define the keystroke
 
 Vim-run defaults to `<leader>r` (for "run"). If you dislike this mapping, you can override it:
 
     let g:run_mapping = 'yourMapping'
 
-### Ignoring the Tmux runner for some filetypes
+### Ignoring the env for some filetypes
 
-Sometimes you want a certain command to always be ran with the default runner. A .vim file is a good example of this. Running source *.vim in the shell is not very useful. `g:run_ignore_tmux` is an array of filetypes for which the tmux runner will be ignored and the default runner will be used.
+Sometimes you want a certain command to always be executed with the default runner. A .vim file is a good example of this. Running source *.vim in the shell is not very useful. `g:run_ignore_env` is an array of filetypes for which the tmux/gui runner will be ignored and the default runner will be used.
 
-    let g:run_ignore_tmux = ["vim"]
+    let g:run_ignore_env = ["vim"]
 
 Defaults
 --------
@@ -77,7 +79,7 @@ These are currently the defaults. They fit me well, please let me know if you di
     let g:run_mapping = '<leader>r'
     let g:run_default_runner = '!{cmd}'
     let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
-    let g:run_ignore_tmux = ['vim']
+    let g:run_ignore_env = ['vim']
     let g:run_custom_runners = {"vim": "{cmd}"}
     let g:run_commands = {
     \   'cpp,java,make' : 'make run',

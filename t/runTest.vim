@@ -79,8 +79,11 @@ describe "run"
     end
 
     it "returns the guivim runner if guivim"
-      " Expect Call("s:getRunner") == "silent !" . expand("<sfile>:p:h:h") .
-      "       \ "bin/execute_in_terminal '{cmd}'"
+      set ft=Any
+      if (has('gui') && !exists("$TMUX"))
+        let g:run_gui_runner = "GUI command {cmd}"
+        Expect Call("s:getRunner") == "GUI command {cmd}"
+      endif
     end
   end
 
