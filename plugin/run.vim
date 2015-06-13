@@ -5,7 +5,7 @@
 function! VimRun()
   let l:cmd = s:getCommand()
   let l:runner = s:getRunner()
-  call s:execute(l:cmd, l:runner)
+  execute s:getExecution(l:runner, l:cmd)
 endfunction
 
 " Returns the correct command as specified by g:run_commands dictionary
@@ -27,8 +27,13 @@ function! s:getRunner()
   endif
 endfunction
 
-function! s:execute(cmd, runner)
-  execute substitute(a:runner, "{cmd}", a:cmd, "g")
+" Returns the executable string, replacing {cmd} and other wildcards
+" in the given runner
+function! s:getExecution(runner, cmd)
+  let l:e = substitute(a:runner, "{cmd}", a:cmd, "g")
+  let l:e = substitute(l:e, "{%}", expand("%"), "g")
+  let l:e = substitute(l:e, "{.}", line("."), "g")
+  return l:e
 endfunction
 
 function! s:init()
@@ -44,10 +49,10 @@ function! s:init()
   if !exists("g:run_commands")
     let g:run_commands = {
   \   'cpp,java,make' : 'make run',
-  \   'html,markdown' : 'open %',
-  \   'js'            : 'node %',
-  \   'ruby'          : 'ruby %',
-  \   'vim'           : 'source %'
+  \   'html,markdown' : 'open {%}',
+  \   'js'            : 'node {%}',
+  \   'ruby'          : 'ruby {%}',
+  \   'vim'           : 'source {%}'
   \ }
   endif
   map <Plug>(Run) :call Run()<CR>

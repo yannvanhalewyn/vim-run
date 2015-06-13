@@ -10,10 +10,10 @@ describe "run"
       Expect g:run_tmux_runner == 'call VimuxRunCommand("{cmd}")'
       Expect g:run_commands == {
       \   'cpp,java,make' : 'make run',
-      \   'html,markdown' : 'open %',
-      \   'js'            : 'node %',
-      \   'ruby'          : 'ruby %',
-      \   'vim'           : 'source %'
+      \   'html,markdown' : 'open {%}',
+      \   'js'            : 'node {%}',
+      \   'ruby'          : 'ruby {%}',
+      \   'vim'           : 'source {%}'
       \ }
     end
 
@@ -56,8 +56,22 @@ describe "run"
     end
   end
 
-  describe "s:execute()"
-    " Haven't found a way to spy/stub ex-command calls.. Maybe by
-    " Scrolling through the history? Let me know!
+  describe "s:getExecution()"
+    it "replaces {cmd} in the runner"
+      Expect Call("s:getExecution",  "silent !{cmd}",  "open someFile") ==
+            \ "silent !open someFile"
+    end
+
+    it "replaces a {%} wildcard"
+      edit tmp.js " set buffername
+      Expect Call("s:getExecution",  "silent !{cmd}",  "open {%}") ==
+          \ "silent !open tmp.js"
+    end
+
+    it "replaces a {.} wildcard"
+      normal yyppp " Add three lines (aka 4 total)
+      Expect Call("s:getExecution",  "silent !{cmd}",  "echo {.}") ==
+          \ "silent !echo 4"
+    end
   end
 end
