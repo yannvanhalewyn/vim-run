@@ -41,17 +41,23 @@ describe "run"
       set ft=invalidFT
       Expect Call("s:getCommand") == ""
     end
+
   end
 
   describe "s:getRunner()"
     it "returns the correct command (run this in and out of tmux, can't stub)"
       if exists("$TMUX")
         let g:run_tmux_runner = "TMUX command {cmd}"
-        Expect Call("s:getRunner", "node %") == "TMUX command node %"
+        Expect Call("s:getRunner") == "TMUX command {cmd}"
       else
         let g:run_default_runner = "DEFAULT command {cmd}"
-        Expect Call("s:getRunner", "node %") == "DEFAULT command node %"
+        Expect Call("s:getRunner") == "DEFAULT command {cmd}"
       endif
     end
+  end
+
+  describe "s:execute()"
+    " Haven't found a way to spy/stub ex-command calls.. Maybe by
+    " Scrolling through the history? Let me know!
   end
 end

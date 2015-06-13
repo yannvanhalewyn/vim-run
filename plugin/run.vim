@@ -1,7 +1,14 @@
 
-function! Run()
+" ===============
+" Main EntryPoint
+" ===============
+function! VimRun()
+  let l:cmd = s:getCommand()
+  let l:runner = s:getRunner()
+  s:execute(l:cmd, l:runner)
 endfunction
 
+" Returns the correct command as specified by g:run_commands dictionary
 function! s:getCommand()
   for entry in keys(g:run_commands)
     if match(entry, &filetype) != -1
@@ -11,16 +18,17 @@ function! s:getCommand()
   return ""
 endfunction
 
-function! s:getRunner(cmd)
+" Returns the correct runner according to environment
+function! s:getRunner()
   if exists("$TMUX")
-    let l:runner = g:run_tmux_runner
+    return g:run_tmux_runner
   else
-    let l:runner = g:run_default_runner
+    return g:run_default_runner
   endif
-  return substitute(l:runner, "{cmd}", a:cmd, "g")
 endfunction
 
-function! s:executeRunner()
+function! s:execute(cmd, runner)
+  execute substitute(a:runner, "{cmd}", a:cmd, "g")
 endfunction
 
 function! s:init()
@@ -43,7 +51,7 @@ function! s:init()
   \ }
   endif
   map <Plug>(Run) :call Run()<CR>
-  execute 'nnoremap ' . g:run_mapping . ' :echo "kaka"'
+  execute 'nnoremap ' . g:run_mapping . ' :call VimRun()'
 endfunction
 
 " begin vspec config
