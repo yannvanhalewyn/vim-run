@@ -1,4 +1,6 @@
 
+let s:plugin_path = expand("<sfile>:p:h:h")
+
 " ===============
 " Main EntryPoint
 " ===============
@@ -36,7 +38,7 @@ endfunction
 " in the given runner
 function! s:getExecution(runner, cmd)
   let l:e = substitute(a:runner, "{cmd}", a:cmd, "g")
-  let l:e = substitute(l:e, "{%}", expand("%"), "g")
+  let l:e = substitute(l:e, "{%}", expand("%:p"), "g")
   let l:e = substitute(l:e, "{.}", line("."), "g")
   return l:e
 endfunction
@@ -52,8 +54,7 @@ function! s:init()
     let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
   endif
   if !exists("g:run_gui_runner")
-    let l:path = expand("<sfile>:p:h:h")
-    let g:run_gui_runner = 'silent !' . l:path . "/bin/execute_in_terminal '{cmd}'"
+    let g:run_gui_runner = 'silent !' . s:plugin_path . "/bin/execute_in_terminal '{cmd}'"
   endif
   if !exists("g:run_ignore_env")
     let g:run_ignore_env = ['vim']
@@ -68,7 +69,7 @@ function! s:init()
   \   'javascript'    : 'npm start',
   \   'ruby'          : 'ruby {%}',
   \   'vim,conf'      : 'source {%}',
-  \   'sh'            : './{%}'
+  \   'sh'            : '{%}'
   \ }
   endif
   map <Plug>(Run) :call Run()<CR>

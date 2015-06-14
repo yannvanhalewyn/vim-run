@@ -9,7 +9,7 @@ describe "run"
       Expect g:run_mapping == '<leader>r'
       Expect g:run_default_runner == '!{cmd}'
       Expect g:run_tmux_runner == 'call VimuxRunCommand("{cmd}")'
-      Expect g:run_gui_runner == 'silent !' . expand("<sfile>:p:h:h") . "/bin/execute_in_terminal '{cmd}'"
+      Expect g:run_gui_runner == 'silent !' . expand("%:p:h") . "/bin/execute_in_terminal '{cmd}'"
       Expect g:run_ignore_env == ['vim']
       Expect g:run_custom_runners == {"vim": "{cmd}"}
       Expect g:run_commands == {
@@ -18,7 +18,7 @@ describe "run"
       \   'javascript'    : 'npm start',
       \   'ruby'          : 'ruby {%}',
       \   'vim,conf'      : 'source {%}',
-      \   'sh'            : './{%}',
+      \   'sh'            : '{%}',
       \ }
     end
 
