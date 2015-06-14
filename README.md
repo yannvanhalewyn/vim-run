@@ -50,14 +50,13 @@ Use wildcards to insert current filepath `{%}` or the current linenumber `{.}`
 There are three runners (for now). A default runner, a gvim (or MacVim) runner and a runner for the Tmux environment. The `{cmd}` will be replaced by the command corresponding to the filetype.
 
     let g:run_default_runner = '!{cmd}'
-    let g:run_gvim_runner = 'silent !run_in_terminal {cmd}'
+    let g:run_gui_runner = 'silent !run_in_terminal {cmd}'
     let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
 
+The default setting for the gui\_runner will launch an included osascript for running the {cmd} in Apple's terminal.
 You can also specify custom runners for a specific filetype. For example, all is well to run silent !{cmd} on most filetypes, but when sourcing .vim files, this doesn't work. The custom runner takes precedence over any other runners.
 
     let g:run_custom_runners = {'vim': '{cmd}'}
-
-**Attention** If you have linked vim to a macvim binary (-> brew install macvim could do that), even terminal vim w/o tmux will use the gui\_runner instead of default\_runner because that vim process responds true to `has("gui")`. If you're not sure, run `:echo has("gui")`. It should be 0 in terminal vim, and 1 in Gvim/Macvim. Plan your runners accordingly!
 
 ### Define the keystroke
 
@@ -79,6 +78,7 @@ These are currently the defaults. They fit me well, please let me know if you di
     let g:run_mapping = '<leader>r'
     let g:run_default_runner = '!{cmd}'
     let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
+    let g:run_gui_runner = 'silent !' . path_to_this_plugin_root . "/bin/execute_in_terminal '{cmd}'"
     let g:run_ignore_env = ['vim']
     let g:run_custom_runners = {"vim": "{cmd}"}
     let g:run_commands = {

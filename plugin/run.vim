@@ -7,7 +7,6 @@ let s:plugin_path = expand("<sfile>:p:h:h")
 function! VimRun()
   let l:cmd = s:getCommand()
   let l:runner = s:getRunner()
-  echom l:runner
   execute s:getExecution(l:runner, l:cmd)
 endfunction
 
