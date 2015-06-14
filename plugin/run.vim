@@ -16,6 +16,9 @@ endfunction
 
 " Returns 1 if current pane is the active tmux pane HACK!!
 function! s:InTmux()
+  if !exists("$TMUX")
+    return 0
+  endif
   let views = split(system("tmux list-panes"), "\n")
   for view in views
     if match(view, "(active)") != -1
