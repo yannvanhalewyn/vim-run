@@ -5,6 +5,7 @@ let s:plugin_path = expand("<sfile>:p:h:h")
 " Main EntryPoint
 " ===============
 function! VimRun()
+  
   let l:cmd = s:getCommandFrom(g:run_commands)
   let l:runner = s:getRunner()
   let l:execution = s:getExecution(l:runner, l:cmd)

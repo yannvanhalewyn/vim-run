@@ -41,9 +41,11 @@ You can set multiple filetypes to the same command:
 
 #### Wildcards
 
-Use wildcards to insert current filepath `{%}` or the current linenumber `{.}`
+Use wildcards to insert current filepath `{%}`, the current linenumber `{.}` or
+the directory the current file is in `{d}`
 
     let g:run_commands = {'ruby': 'ruby {%}', 'sh': './{%}'}
+    let g:run_gui_runner = "silent !run_in_terminal 'cd {d} $$ {cmd}'"
 
 ### Defining the runners
 
