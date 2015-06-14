@@ -7,6 +7,7 @@ describe "run"
   describe "s:init()"
     it "sets the correct defaults if none set"
       Expect g:run_mapping == '<leader>r'
+      Expect g:run_alternate_mapping == '<leader>R'
       Expect g:run_default_runner == '!{cmd}'
       Expect g:run_tmux_runner == 'call VimuxRunCommand("{cmd}")'
       Expect g:run_gui_runner == 'silent !' . expand("%:p:h") . "/bin/execute_in_terminal '{cmd}'"
@@ -18,7 +19,11 @@ describe "run"
       \   'javascript'    : 'npm start',
       \   'ruby'          : 'ruby {%}',
       \   'vim,conf'      : 'source {%}',
-      \   'sh'            : '{%}',
+      \   'sh'            : '{%}'
+      \ }
+      Expect g:run_alternate_commands == {
+      \   'cpp,java,make' : 'make clean',
+      \   'javascript'    : 'node {%}'
       \ }
     end
 

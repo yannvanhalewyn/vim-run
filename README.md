@@ -70,6 +70,19 @@ Sometimes you want a certain command to always be executed with the default runn
 
     let g:run_ignore_env = ["vim"]
 
+### Alternate commands
+
+For every action there is a reaction. You can specify alternate actions for each filetype, in the same manner as the main commands. Those actions will by default be triggered by <leader>R:
+
+    Expect g:run_alternate_commands = {
+    \   'cpp,java,make' : 'make clean',
+    \   'javascript'    : 'node {%}'
+    }
+
+To override the mapping:
+
+    let g:run_alternate_mapping = "<leader>R"
+
 Defaults
 --------
 

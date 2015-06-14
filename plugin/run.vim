@@ -60,6 +60,9 @@ function! s:init()
   if !exists("g:run_mapping")
     let g:run_mapping = '<leader>r'
   endif
+  if !exists("g:run_alternate_mapping")
+    let g:run_alternate_mapping = '<leader>R'
+  endif
   if !exists("g:run_default_runner")
     let g:run_default_runner = '!{cmd}'
   endif
@@ -83,6 +86,12 @@ function! s:init()
   \   'ruby'          : 'ruby {%}',
   \   'vim,conf'      : 'source {%}',
   \   'sh'            : '{%}'
+  \ }
+  endif
+  if !exists("g:run_alternate_commands")
+    let g:run_alternate_commands = {
+  \   'cpp,java,make' : 'make clean',
+  \   'javascript'    : 'node {%}'
   \ }
   endif
   map <Plug>(Run) :call Run()<CR>
