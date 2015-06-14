@@ -56,9 +56,6 @@ describe "run"
       if exists("$TMUX")
         let g:run_tmux_runner = "TMUX command {cmd}"
         Expect Call("s:getRunner") == "TMUX command {cmd}"
-      elseif has("gui")
-        let g:run_gui_runner = "GUI command {cmd}"
-        Expect Call("s:getRunner") == "GUI command {cmd}"
       else
         let g:run_default_runner = "DEFAULT command {cmd}"
         Expect Call("s:getRunner") == "DEFAULT command {cmd}"
@@ -80,7 +77,7 @@ describe "run"
 
     it "returns the guivim runner if guivim"
       set ft=Any
-      if (has('gui') && !exists("$TMUX"))
+      if !exists("$TMUX")
         let g:run_gui_runner = "GUI command {cmd}"
         Expect Call("s:getRunner") == "GUI command {cmd}"
       endif
@@ -95,8 +92,9 @@ describe "run"
 
     it "replaces a {%} wildcard"
       edit tmp.js " set buffername
+      let l:path = expand("%:p")
       Expect Call("s:getExecution",  "silent !{cmd}",  "open {%}") ==
-          \ "silent !open tmp.js"
+          \ "silent !open " . l:path
     end
 
     it "replaces a {.} wildcard"

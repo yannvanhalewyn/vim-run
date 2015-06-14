@@ -28,7 +28,7 @@ function! s:getRunner()
     return g:run_default_runner
   elseif exists("$TMUX")
     return g:run_tmux_runner
-  elseif has("gui")
+  elseif has("gui_running")
     return g:run_gui_runner
   endif
   return g:run_default_runner
