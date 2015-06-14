@@ -25,58 +25,60 @@ Vim-run abstracts you from all those autocommands, and executes the correct one 
 Usage
 -----
 
+The basic idea is that every filetype has an action used to run (e.g: node %, source %, make run, open %, ..). These are environment independent. On top of that there are "runners" which carry out those actions in a specific manner, depending on the environment (e.g: "silent !{action}" or "dispatch {action}").
+
 **NOTE** Check the defaults below. It works right out of the box, you might not need any configuration.
 
-### Defining the raw commands
+### Defining the actions
 
-set the `g:run_commands` dictionnary to map any filetype to it's run-command:
+set the `g:vimrun_actions` dictionnary to map any filetype to it's run-action:
 
-    let g:run_commands = {'cpp': 'make', 'ft': 'command'}
+    let g:vimrun_actions = {'cpp': 'make', 'ft': 'action'}
 
-You can set multiple filetypes to the same command:
+You can set multiple filetypes to the same action:
 
-    let g:run_commands = {'cpp,make,java', 'make'}
+    let g:vimrun_actions = {'cpp,make,java', 'make'}
 
 **note**: You can modify this dictionary while vim is running.
 
-#### Wildcards
-
-Use wildcards to insert current filepath `{%}`, the current linenumber `{.}` or
-the directory the current file is in `{d}`
-
-    let g:run_commands = {'ruby': 'ruby {%}', 'sh': './{%}'}
-    let g:run_gui_runner = "silent !run_in_terminal 'cd {d} $$ {cmd}'"
-
 ### Defining the runners
 
-There are three runners (for now). A default runner, a gvim (or MacVim) runner and a runner for the Tmux environment. The `{cmd}` will be replaced by the command corresponding to the filetype.
+There are three runners (for now). A default runner, a gvim (or MacVim) runner and a runner for the Tmux environment. The `{cmd}` will be replaced by the action corresponding to the filetype.
 
-    let g:run_default_runner = '!{cmd}'
-    let g:run_gui_runner = 'silent !run_in_terminal {cmd}'
-    let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
+    let g:vimrun_default_runner = '!{cmd}'
+    let g:vimrun_gui_runner = 'silent !run_in_terminal {cmd}'
+    let g:vimrun_tmux_runner = 'call VimuxRunCommand("{cmd}")'
 
 The default setting for the gui\_runner will launch an included osascript for running the {cmd} in Apple's terminal.
+
 You can also specify custom runners for a specific filetype. For example, all is well to run silent !{cmd} on most filetypes, but when sourcing .vim files, this doesn't work. The custom runner takes precedence over any other runners.
 
-    let g:run_custom_runners = {'vim': '{cmd}'}
+    let g:vimrun_custom_runners = {'vim': '{cmd}'} " simply run :source % for vim
+
+#### Wildcards
+
+Use wildcards to insert current filepath `{%}`, the current linenumber `{.}` or the directory the current file is in `{d}`. These can be used in actions and in runners.
+
+    let g:vimrun_actions = {'ruby': 'ruby {%}', 'sh': './{%}'}
+    let g:vimrun_gui_runner = "silent !run_in_terminal 'cd {d} $$ {cmd}'"
 
 ### Define the keystroke
 
 Vim-run defaults to `<leader>r` (for "run"). If you dislike this mapping, you can override it:
 
-    let g:run_mapping = 'yourMapping'
+    let g:vimrun_mapping = 'yourMapping'
 
-### Ignoring the env for some filetypes
+### Ignoring the environment for some filetypes
 
 Sometimes you want a certain command to always be executed with the default runner. A .vim file is a good example of this. Running source *.vim in the shell is not very useful. `g:run_ignore_env` is an array of filetypes for which the tmux/gui runner will be ignored and the default runner will be used.
 
-    let g:run_ignore_env = ["vim"]
+    let g:vimrun_ignore_env = ["vim"]
 
-### Alternate commands
+### Alternate actions
 
-For every action there is a reaction. You can specify alternate actions for each filetype, in the same manner as the main commands. Those actions will by default be triggered by <leader>R:
+For every action there is a reaction. You can specify alternate actions for each filetype, in the same manner as the main ones. Those actions will by default be triggered by <leader>R:
 
-    Expect g:run_alternate_commands = {
+    Expect g:vimrun_alternate_actions = {
     \   'cpp,java,make' : 'make clean',
     \   'javascript'    : 'node {%}'
     }
@@ -90,13 +92,13 @@ Defaults
 
 These are currently the defaults. They fit me well, please let me know if you dissagree. If this is what you need, no extra configuration is needed to make vim-run work:
 
-    let g:run_mapping = '<leader>r'
-    let g:run_default_runner = '!{cmd}'
-    let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
-    let g:run_gui_runner = 'silent !' . path_to_this_plugin_root . "/bin/execute_in_terminal '{cmd}'"
-    let g:run_ignore_env = ['vim']
-    let g:run_custom_runners = {"vim": "{cmd}"}
-    let g:run_commands = {
+    let g:vimrun_mapping = '<leader>r'
+    let g:vimrun_default_runner = '!{cmd}'
+    let g:vimrun_tmux_runner = 'call VimuxRunCommand("{cmd}")'
+    let g:vimrun_gui_runner = 'silent !' . path_to_this_plugin_root . "/bin/execute_in_terminal '{cmd}'"
+    let g:vimrun_ignore_env = ['vim']
+    let g:vimrun_custom_runners = {"vim": "{cmd}"}
+    let g:vimrun_actions = {
     \   'cpp,java,make' : 'make run',
     \   'html,markdown' : 'open {%}',
     \   'javascript'    : 'npm start',
@@ -104,7 +106,10 @@ These are currently the defaults. They fit me well, please let me know if you di
     \   'vim,conf'      : 'source {%}',
     \   'sh'            : '{%}',
     \ }
-
+    let g:run_alternate_actions = {
+    \   'cpp,java,make' : 'make clean',
+    \   'javascript'    : 'node {%}'
+    \ }
 
 Installation
 ------------
