@@ -7,13 +7,17 @@ let s:plugin_path = expand("<sfile>:p:h:h")
 function! VimRun()
   let l:cmd = s:getCommandFrom(g:run_commands)
   let l:runner = s:getRunner()
-  execute s:getExecution(l:runner, l:cmd)
+  let l:execution = s:getExecution(l:runner, l:cmd)
+  echom l:execution
+  execute l:execution
 endfunction
 
 function! VimRunAlternate()
   let l:cmd = s:getCommandFrom(g:run_alternate_commands)
   let l:runner = s:getRunner()
-  execute s:getExecution(l:runner, l:cmd)
+  let l:execution = s:getExecution(l:runner, l:cmd)
+  echom l:execution
+  execute l:execution
 endfunction
 
 " Returns 1 if current pane is the active tmux pane HACK!!
@@ -58,7 +62,8 @@ endfunction
 function! s:getExecution(runner, cmd)
   let l:e = substitute(a:runner, "{cmd}", a:cmd, "g")
   let l:e = substitute(l:e, "{%}", expand("%:p"), "g")
-  let l:e = substitute(l:e, "{.}", line("."), "g")
+  let l:e = substitute(l:e, "{d}", expand("%:p:h"), "g")
+  let l:e = substitute(l:e, "{\\.}", line("."), "g")
   return l:e
 endfunction
 

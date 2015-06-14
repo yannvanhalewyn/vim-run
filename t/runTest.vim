@@ -120,5 +120,11 @@ describe "run"
       Expect Call("s:getExecution",  "silent !{cmd}",  "echo {.}") ==
           \ "silent !echo 4"
     end
+
+    it "replaces a {d} wildcard"
+      let l:path = expand("%:p:h")
+      Expect Call("s:getExecution",  "silent !cd {d} && {cmd}",  "echo something") ==
+          \ "silent !cd ". l:path . " && echo something"
+    end
   end
 end
