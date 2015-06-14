@@ -1,24 +1,18 @@
 
 let s:plugin_path = expand("<sfile>:p:h:h")
 
+" Restik <unique> here
+" noremap  <Plug>VimRun :call VimRun(g:run_commands)<CR>
+nnoremap <silent> <Plug>Vimrun  :<C-U>call <SID>VimRun(g:run_commands)<CR>
+noremap  <silent> <Plug>VimrunAlternate :<C-U>call <SID>VimRun(g:run_alternate_commands)<CR>
+
 " ===============
 " Main EntryPoint
 " ===============
-function! VimRun()
-  
-  let l:cmd = s:getCommandFrom(g:run_commands)
+function! s:VimRun(commands)
+  let l:cmd = s:getCommandFrom(a:commands)
   let l:runner = s:getRunner()
-  let l:execution = s:getExecution(l:runner, l:cmd)
-  echom l:execution
-  execute l:execution
-endfunction
-
-function! VimRunAlternate()
-  let l:cmd = s:getCommandFrom(g:run_alternate_commands)
-  let l:runner = s:getRunner()
-  let l:execution = s:getExecution(l:runner, l:cmd)
-  echom l:execution
-  execute l:execution
+  execute s:getExecution(l:runner, l:cmd)
 endfunction
 
 " Returns 1 if current pane is the active tmux pane HACK!!
@@ -107,8 +101,8 @@ function! s:init()
   \ }
   endif
   map <Plug>(Run) :call Run()<CR>
-  execute 'nnoremap ' . g:run_mapping . ' :call VimRun()<CR>'
-  execute 'nnoremap ' . g:run_alternate_mapping . ' :call VimRunAlternate()<CR>'
+  execute 'nmap ' . g:run_mapping . ' <Plug>Vimrun'
+  execute 'nmap ' . g:run_alternate_mapping . ' <Plug>VimrunAlternate'
 endfunction
 
 " begin vspec config
