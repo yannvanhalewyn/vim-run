@@ -2,17 +2,16 @@
 let s:plugin_path = expand("<sfile>:p:h:h")
 
 " Restik <unique> here
-" noremap  <Plug>VimRun :call VimRun(g:run_commands)<CR>
-nnoremap <silent> <Plug>Vimrun  :<C-U>call <SID>VimRun(g:run_commands)<CR>
-noremap  <silent> <Plug>VimrunAlternate :<C-U>call <SID>VimRun(g:run_alternate_commands)<CR>
+nnoremap <silent> <Plug>Vimrun  :<C-U>call <SID>VimRun(g:vimrun_actions)<CR>
+noremap  <silent> <Plug>VimrunAlternate :<C-U>call <SID>VimRun(g:vimrun_alternate_actions)<CR>
 
 " ===============
 " Main EntryPoint
 " ===============
-function! s:VimRun(commands)
-  let l:cmd = s:getCommandFrom(a:commands)
+function! s:VimRun(actionset)
+  let l:action = s:getActionFrom(a:actionset)
   let l:runner = s:getRunner()
-  execute s:getExecution(l:runner, l:cmd)
+  execute s:getExecution(l:runner, l:action)
 endfunction
 
 " Returns 1 if current pane is the active tmux pane HACK!!
@@ -25,13 +24,13 @@ function! s:InTmux()
   endfor
 endfunction
 
-" Returns the correct command as specified by g:run_commands dictionary
-function! s:getCommandFrom(dictionary)
+" Returns the correct action as specified by g:vimrun_actions dictionary
+function! s:getActionFrom(actionset)
   let l:ft = &filetype
-  for entry in keys(a:dictionary)
+  for entry in keys(a:actionset)
     for type in split(entry, ",")
       if type == l:ft
-        return a:dictionary[entry]
+        return a:actionset[entry]
       endif
     endfor
   endfor
@@ -40,22 +39,22 @@ endfunction
 
 " Returns the correct runner according to environment
 function! s:getRunner()
-  if exists("g:run_custom_runners[&filetype]")
-    return g:run_custom_runners[&filetype]
-  elseif index(g:run_ignore_env, &filetype) != -1
-    return g:run_default_runner
+  if exists("g:vimrun_custom_runners[&filetype]")
+    return g:vimrun_custom_runners[&filetype]
+  elseif index(g:vimrun_ignore_env, &filetype) != -1
+    return g:vimrun_default_runner
   elseif s:InTmux()
-    return g:run_tmux_runner
+    return g:vimrun_tmux_runner
   elseif has("gui") && has("gui_running")
-    return g:run_gui_runner
+    return g:vimrun_gui_runner
   endif
-  return g:run_default_runner
+  return g:vimrun_default_runner
 endfunction
 
 " Returns the executable string, replacing {cmd} and other wildcards
 " in the given runner
-function! s:getExecution(runner, cmd)
-  let l:e = substitute(a:runner, "{cmd}", a:cmd, "g")
+function! s:getExecution(runner, action)
+  let l:e = substitute(a:runner, "{cmd}", a:action, "g")
   let l:e = substitute(l:e, "{%}", expand("%:p"), "g")
   let l:e = substitute(l:e, "{d}", expand("%:p:h"), "g")
   let l:e = substitute(l:e, "{\\.}", line("."), "g")
@@ -63,29 +62,29 @@ function! s:getExecution(runner, cmd)
 endfunction
 
 function! s:init()
-  if !exists("g:run_mapping")
-    let g:run_mapping = '<leader>r'
+  if !exists("g:vimrun_mapping")
+    let g:vimrun_mapping = '<leader>r'
   endif
-  if !exists("g:run_alternate_mapping")
-    let g:run_alternate_mapping = '<leader>R'
+  if !exists("g:vimrun_alternate_mapping")
+    let g:vimrun_alternate_mapping = '<leader>R'
   endif
-  if !exists("g:run_default_runner")
-    let g:run_default_runner = '!{cmd}'
+  if !exists("g:vimrun_default_runner")
+    let g:vimrun_default_runner = '!{cmd}'
   endif
-  if !exists("g:run_tmux_runner")
-    let g:run_tmux_runner = 'call VimuxRunCommand("{cmd}")'
+  if !exists("g:vimrun_tmux_runner")
+    let g:vimrun_tmux_runner = 'call VimuxRunCommand("{cmd}")'
   endif
-  if !exists("g:run_gui_runner")
-    let g:run_gui_runner = 'silent !' . s:plugin_path . "/bin/execute_in_terminal '{cmd}'"
+  if !exists("g:vimrun_gui_runner")
+    let g:vimrun_gui_runner = 'silent !' . s:plugin_path . "/bin/execute_in_terminal '{cmd}'"
   endif
-  if !exists("g:run_ignore_env")
-    let g:run_ignore_env = ['vim']
+  if !exists("g:vimrun_ignore_env")
+    let g:vimrun_ignore_env = ['vim']
   endif
-  if !exists("g:run_custom_runners")
-    let g:run_custom_runners = {'vim': "{cmd}"}
+  if !exists("g:vimrun_custom_runners")
+    let g:vimrun_custom_runners = {'vim': "{cmd}"}
   endif
-  if !exists("g:run_commands")
-    let g:run_commands = {
+  if !exists("g:vimrun_actions")
+    let g:vimrun_actions = {
   \   'cpp,java,make' : 'make run',
   \   'html,markdown' : 'open {%}',
   \   'javascript'    : 'npm start',
@@ -94,15 +93,15 @@ function! s:init()
   \   'sh'            : '{%}'
   \ }
   endif
-  if !exists("g:run_alternate_commands")
-    let g:run_alternate_commands = {
+  if !exists("g:vimrun_alternate_actions")
+    let g:vimrun_alternate_actions = {
   \   'cpp,java,make' : 'make clean',
   \   'javascript'    : 'node {%}'
   \ }
   endif
   map <Plug>(Run) :call Run()<CR>
-  execute 'nmap ' . g:run_mapping . ' <Plug>Vimrun'
-  execute 'nmap ' . g:run_alternate_mapping . ' <Plug>VimrunAlternate'
+  execute 'nmap ' . g:vimrun_mapping . ' <Plug>Vimrun'
+  execute 'nmap ' . g:vimrun_alternate_mapping . ' <Plug>VimrunAlternate'
 endfunction
 
 " begin vspec config

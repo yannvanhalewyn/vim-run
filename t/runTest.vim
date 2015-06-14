@@ -6,14 +6,14 @@ call vspec#hint({'scope': 'run#scope()', 'sid': 'run#sid()'})
 describe "run"
   describe "s:init()"
     it "sets the correct defaults if none set"
-      Expect g:run_mapping == '<leader>r'
-      Expect g:run_alternate_mapping == '<leader>R'
-      Expect g:run_default_runner == '!{cmd}'
-      Expect g:run_tmux_runner == 'call VimuxRunCommand("{cmd}")'
-      Expect g:run_gui_runner == 'silent !' . expand("%:p:h") . "/bin/execute_in_terminal '{cmd}'"
-      Expect g:run_ignore_env == ['vim']
-      Expect g:run_custom_runners == {"vim": "{cmd}"}
-      Expect g:run_commands == {
+      Expect g:vimrun_mapping == '<leader>r'
+      Expect g:vimrun_alternate_mapping == '<leader>R'
+      Expect g:vimrun_default_runner == '!{cmd}'
+      Expect g:vimrun_tmux_runner == 'call VimuxRunCommand("{cmd}")'
+      Expect g:vimrun_gui_runner == 'silent !' . expand("%:p:h") . "/bin/execute_in_terminal '{cmd}'"
+      Expect g:vimrun_ignore_env == ['vim']
+      Expect g:vimrun_custom_runners == {"vim": "{cmd}"}
+      Expect g:vimrun_actions == {
       \   'cpp,java,make' : 'make run',
       \   'html,markdown' : 'open {%}',
       \   'javascript'    : 'npm start',
@@ -21,49 +21,49 @@ describe "run"
       \   'vim,conf'      : 'source {%}',
       \   'sh'            : '{%}'
       \ }
-      Expect g:run_alternate_commands == {
+      Expect g:vimrun_alternate_actions == {
       \   'cpp,java,make' : 'make clean',
       \   'javascript'    : 'node {%}'
       \ }
     end
 
     it "doesn't override user mappings"
-      let g:run_mapping = "<leader>k"
+      let g:vimrun_mapping = "<leader>k"
       call Call("s:init")
-      Expect g:run_mapping == "<leader>k"
+      Expect g:vimrun_mapping == "<leader>k"
     end
   end
 
-  describe "s:getCommandFrom()"
-    it "returns the correct mapping if exists (single)"
-      let l:commands={'ruby': 'ruby %'}
+  describe "s:getActionFrom()"
+    it "returns the correct action if exists (single)"
+      let l:actions={'ruby': 'ruby %'}
       set ft=ruby
-      Expect Call("s:getCommandFrom", l:commands) == "ruby %"
+      Expect Call("s:getActionFrom", l:actions) == "ruby %"
     end
 
-    it "returns the correct mapping if exists (multi)"
-      let l:commands={'html,markdown,txt': 'open %'}
+    it "returns the correct action if exists (multi)"
+      let l:actions={'html,markdown,txt': 'open %'}
       set ft=markdown
-      Expect Call("s:getCommandFrom", l:commands) == "open %"
+      Expect Call("s:getActionFrom", l:actions) == "open %"
     end
 
-    it "returns an empty string if no cmd exists"
+    it "returns an empty string if no action exists"
       set ft=invalidFT
-      Expect Call("s:getCommandFrom", g:run_commands) == ""
+      Expect Call("s:getActionFrom", g:vimrun_actions) == ""
     end
 
     it "returns an empty string if no filetype"
       set ft=
-      Expect Call("s:getCommandFrom", g:run_commands) == ""
+      Expect Call("s:getActionFrom", g:vimrun_actions) == ""
     end
 
     it "handles java ambiguous entries"
       set ft=java
-      let l:commands = {"javascript": "JS {cmd}",
+      let l:actions = {"javascript": "JS {cmd}",
             \ "cpp,java"      : "JAVA {cmd}",
             \ "javaSomething" : "JSOMETHING {cmd}"
             \ }
-      Expect Call("s:getCommandFrom", l:commands) == "JAVA {cmd}"
+      Expect Call("s:getActionFrom", l:actions) == "JAVA {cmd}"
     end
   end
 
@@ -72,31 +72,31 @@ describe "run"
     " please let me know!
     it "returns the correct command (run this in and out of tmux, can't stub)"
       if Call("s:InTmux")
-        let g:run_tmux_runner = "TMUX command {cmd}"
+        let g:vimrun_tmux_runner = "TMUX command {cmd}"
         Expect Call("s:getRunner") == "TMUX command {cmd}"
       else
-        let g:run_default_runner = "DEFAULT command {cmd}"
+        let g:vimrun_default_runner = "DEFAULT command {cmd}"
         Expect Call("s:getRunner") == "DEFAULT command {cmd}"
       endif
     end
 
-    it "uses default runner if ft is specified in g:run_ignore_env"
+    it "uses default runner if ft is specified in g:vimrun_ignore_env"
       set ft=cpp
-      let g:run_default_runner = "DEFAULT command {cmd}"
-      let g:run_ignore_env = ['cpp']
+      let g:vimrun_default_runner = "DEFAULT command {cmd}"
+      let g:vimrun_ignore_env = ['cpp']
       Expect Call("s:getRunner") == "DEFAULT command {cmd}"
     end
 
     it "uses custom runner if any"
       set ft=vim
-      let g:run_custom_runners = {"vim": "{cmd}"}
+      let g:vimrun_custom_runners = {"vim": "{cmd}"}
       Expect Call("s:getRunner") == "{cmd}"
     end
 
     it "returns the guivim runner if guivim"
       set ft=Any
       if !exists("$TMUX")
-        let g:run_gui_runner = "GUI command {cmd}"
+        let g:vimrun_gui_runner = "GUI command {cmd}"
         Expect Call("s:getRunner") == "GUI command {cmd}"
       endif
     end
