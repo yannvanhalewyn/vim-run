@@ -53,7 +53,7 @@ describe "run"
     " If anyone has an idea on how to stub has("gui") and exists("$TMUX"),
     " please let me know!
     it "returns the correct command (run this in and out of tmux, can't stub)"
-      if exists("$TMUX")
+      if Call("s:InTmux")
         let g:run_tmux_runner = "TMUX command {cmd}"
         Expect Call("s:getRunner") == "TMUX command {cmd}"
       else

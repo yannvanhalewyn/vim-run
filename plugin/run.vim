@@ -7,7 +7,18 @@ let s:plugin_path = expand("<sfile>:p:h:h")
 function! VimRun()
   let l:cmd = s:getCommand()
   let l:runner = s:getRunner()
+  echom l:runner
   execute s:getExecution(l:runner, l:cmd)
+endfunction
+
+" Returns 1 if current pane is the active tmux pane HACK!!
+function! s:InTmux()
+  let views = split(system("tmux list-panes"), "\n")
+  for view in views
+    if match(view, "(active)") != -1
+      return matchlist(view, '%[0-9]\+')[0] == $TMUX_PANE
+    endif
+  endfor
 endfunction
 
 " Returns the correct command as specified by g:run_commands dictionary
@@ -26,7 +37,7 @@ function! s:getRunner()
     return g:run_custom_runners[&filetype]
   elseif index(g:run_ignore_env, &filetype) != -1
     return g:run_default_runner
-  elseif exists("$TMUX")
+  elseif s:InTmux()
     return g:run_tmux_runner
   elseif has("gui_running")
     return g:run_gui_runner
