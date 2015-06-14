@@ -29,6 +29,8 @@ The basic idea is that every filetype has an action used to run (e.g: node %, so
 
 **NOTE** Check the defaults below. It works right out of the box, you might not need any configuration.
 
+![multi file type demo gif](http://i.imgur.com/JVMqclE.gif)
+
 ### Defining the actions
 
 set the `g:vimrun_actions` dictionnary to map any filetype to it's run-action:
@@ -80,7 +82,8 @@ For every action there is a reaction. You can specify alternate actions for each
 
     Expect g:vimrun_alternate_actions = {
     \   'cpp,java,make' : 'make clean',
-    \   'javascript'    : 'node {%}'
+    \   'javascript'    : 'node {%}',
+    \   'ruby'          : 'rake'
     }
 
 To override the mapping:
@@ -92,13 +95,13 @@ Defaults
 
 These are currently the defaults. They fit me well, please let me know if you dissagree. If this is what you need, no extra configuration is needed to make vim-run work:
 
-    let g:vimrun_mapping = '<leader>r'
+    let g:vimrun_mapping        = '<leader>r'
     let g:vimrun_default_runner = '!{cmd}'
-    let g:vimrun_tmux_runner = 'call VimuxRunCommand("{cmd}")'
-    let g:vimrun_gui_runner = 'silent !' . path_to_this_plugin_root . "/bin/execute_in_terminal '{cmd}'"
-    let g:vimrun_ignore_env = ['vim']
+    let g:vimrun_tmux_runner    = 'call VimuxRunCommand("{cmd}")'
+    let g:vimrun_gui_runner     = 'silent !' . path_to_this_plugin_root . "/bin/execute_in_terminal '{cmd}'"
+    let g:vimrun_ignore_env     = ['vim']
     let g:vimrun_custom_runners = {"vim": "{cmd}"}
-    let g:vimrun_actions = {
+    let g:vimrun_actions        = {
     \   'cpp,java,make' : 'make run',
     \   'html,markdown' : 'open {%}',
     \   'javascript'    : 'npm start',
@@ -106,9 +109,10 @@ These are currently the defaults. They fit me well, please let me know if you di
     \   'vim,conf'      : 'source {%}',
     \   'sh'            : '{%}',
     \ }
-    let g:run_alternate_actions = {
+    let g:vimrun_alternate_actions = {
     \   'cpp,java,make' : 'make clean',
-    \   'javascript'    : 'node {%}'
+    \   'javascript'    : 'node {%}',
+    \   'ruby'          : 'rake'
     \ }
 
 Installation

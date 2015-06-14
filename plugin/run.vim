@@ -96,7 +96,8 @@ function! s:init()
   if !exists("g:vimrun_alternate_actions")
     let g:vimrun_alternate_actions = {
   \   'cpp,java,make' : 'make clean',
-  \   'javascript'    : 'node {%}'
+  \   'javascript'    : 'node {%}',
+  \   'ruby'          : 'rake'
   \ }
   endif
   map <Plug>(Run) :call Run()<CR>

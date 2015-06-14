@@ -23,7 +23,8 @@ describe "run"
       \ }
       Expect g:vimrun_alternate_actions == {
       \   'cpp,java,make' : 'make clean',
-      \   'javascript'    : 'node {%}'
+      \   'javascript'    : 'node {%}',
+      \   'ruby'          : 'rake'
       \ }
     end
 
