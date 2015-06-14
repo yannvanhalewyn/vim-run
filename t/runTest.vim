@@ -34,27 +34,27 @@ describe "run"
     end
   end
 
-  describe "s:getCommand()"
+  describe "s:getCommandFrom()"
     it "returns the correct mapping if exists (single)"
-      let g:run_commands={'ruby': 'ruby %'}
+      let l:commands={'ruby': 'ruby %'}
       set ft=ruby
-      Expect Call("s:getCommand") == "ruby %"
+      Expect Call("s:getCommandFrom", l:commands) == "ruby %"
     end
 
     it "returns the correct mapping if exists (multi)"
-      let g:run_commands={'html,markdown,txt': 'open %'}
+      let l:commands={'html,markdown,txt': 'open %'}
       set ft=markdown
-      Expect Call("s:getCommand") == "open %"
+      Expect Call("s:getCommandFrom", l:commands) == "open %"
     end
 
     it "returns an empty string if no cmd exists"
       set ft=invalidFT
-      Expect Call("s:getCommand") == ""
+      Expect Call("s:getCommandFrom", g:run_commands) == ""
     end
 
     it "returns an empty string if no filetype"
       set ft=
-      Expect Call("s:getCommand") == ""
+      Expect Call("s:getCommandFrom", g:run_commands) == ""
     end
   end
 

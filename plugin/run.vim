@@ -5,7 +5,13 @@ let s:plugin_path = expand("<sfile>:p:h:h")
 " Main EntryPoint
 " ===============
 function! VimRun()
-  let l:cmd = s:getCommand()
+  let l:cmd = s:getCommandFrom(g:run_commands)
+  let l:runner = s:getRunner()
+  execute s:getExecution(l:runner, l:cmd)
+endfunction
+
+function! VimRunAlternate()
+  let l:cmd = s:getCommandFrom(g:run_alternate_commands)
   let l:runner = s:getRunner()
   execute s:getExecution(l:runner, l:cmd)
 endfunction
@@ -21,13 +27,13 @@ function! s:InTmux()
 endfunction
 
 " Returns the correct command as specified by g:run_commands dictionary
-function! s:getCommand()
+function! s:getCommandFrom(dictionary)
   if strlen(&filetype) == 0
     return ""
   endif
-  for entry in keys(g:run_commands)
+  for entry in keys(a:dictionary)
     if match(entry, &filetype) != -1
-      return g:run_commands[entry]
+      return a:dictionary[entry]
     endif
   endfor
   return ""
@@ -96,6 +102,7 @@ function! s:init()
   endif
   map <Plug>(Run) :call Run()<CR>
   execute 'nnoremap ' . g:run_mapping . ' :call VimRun()<CR>'
+  execute 'nnoremap ' . g:run_alternate_mapping . ' :call VimRunAlternate()<CR>'
 endfunction
 
 " begin vspec config
