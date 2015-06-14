@@ -56,6 +56,15 @@ describe "run"
       set ft=
       Expect Call("s:getCommandFrom", g:run_commands) == ""
     end
+
+    it "handles java ambiguous entries"
+      set ft=java
+      let l:commands = {"javascript": "JS {cmd}",
+            \ "cpp,java"      : "JAVA {cmd}",
+            \ "javaSomething" : "JSOMETHING {cmd}"
+            \ }
+      Expect Call("s:getCommandFrom", l:commands) == "JAVA {cmd}"
+    end
   end
 
   describe "s:getRunner()"

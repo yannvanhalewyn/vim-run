@@ -28,13 +28,13 @@ endfunction
 
 " Returns the correct command as specified by g:run_commands dictionary
 function! s:getCommandFrom(dictionary)
-  if strlen(&filetype) == 0
-    return ""
-  endif
+  let l:ft = &filetype
   for entry in keys(a:dictionary)
-    if match(entry, &filetype) != -1
-      return a:dictionary[entry]
-    endif
+    for type in split(entry, ",")
+      if type == l:ft
+        return a:dictionary[entry]
+      endif
+    endfor
   endfor
   return ""
 endfunction

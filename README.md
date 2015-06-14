@@ -100,7 +100,7 @@ These are currently the defaults. They fit me well, please let me know if you di
     \   'javascript'    : 'npm start',
     \   'ruby'          : 'ruby {%}',
     \   'vim,conf'      : 'source {%}',
-    \   'sh'            : './{%}',
+    \   'sh'            : '{%}',
     \ }
 
 
