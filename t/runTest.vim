@@ -47,6 +47,10 @@ describe "run"
       Expect Call("s:getCommand") == ""
     end
 
+    it "returns an empty string if no filetype"
+      set ft=
+      Expect Call("s:getCommand") == ""
+    end
   end
 
   describe "s:getRunner()"

@@ -22,6 +22,9 @@ endfunction
 
 " Returns the correct command as specified by g:run_commands dictionary
 function! s:getCommand()
+  if strlen(&filetype) == 0
+    return ""
+  endif
   for entry in keys(g:run_commands)
     if match(entry, &filetype) != -1
       return g:run_commands[entry]
