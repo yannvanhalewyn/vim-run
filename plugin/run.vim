@@ -2,8 +2,8 @@
 let s:plugin_path = expand("<sfile>:p:h:h")
 
 " Restik <unique> here
-nnoremap <silent> <Plug>Vimrun  :<C-U>call <SID>VimRun(g:vimrun_actions)<CR>
-noremap  <silent> <Plug>VimrunAlternate :<C-U>call <SID>VimRun(g:vimrun_alternate_actions)<CR>
+nnoremap <Plug>Vimrun  :<C-U>call <SID>VimRun(g:vimrun_actions)<CR>
+noremap  <Plug>VimrunAlternate :<C-U>call <SID>VimRun(g:vimrun_alternate_actions)<CR>
 
 " ===============
 " Main EntryPoint
