@@ -88,19 +88,19 @@ function! s:init()
   endif
   if !exists("g:vimrun_actions")
     let g:vimrun_actions = {
-  \   'cpp,java,make' : 'make run',
-  \   'html,markdown' : 'open {%}',
-  \   'javascript'    : 'npm start',
-  \   'ruby'          : 'ruby {%}',
-  \   'vim,conf'      : 'source {%}',
-  \   'sh'            : '{%}'
+  \   'cpp,java,make,c' : 'make run',
+  \   'html,markdown'   : 'open {%}',
+  \   'javascript'      : 'node {%}',
+  \   'ruby'            : 'ruby {%}',
+  \   'vim,conf'        : 'source {%}',
+  \   'sh'              : '{%}'
   \ }
   endif
   if !exists("g:vimrun_alternate_actions")
     let g:vimrun_alternate_actions = {
-  \   'cpp,java,make' : 'make clean',
-  \   'javascript'    : 'node {%}',
-  \   'ruby'          : 'rake'
+  \   'cpp,java,make,c' : 'make clean',
+  \   'javascript'      : 'npm start',
+  \   'ruby'            : 'rake'
   \ }
   endif
   map <Plug>(Run) :call Run()<CR>
